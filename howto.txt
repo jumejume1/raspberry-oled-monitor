@@ -16,6 +16,6 @@ dtparam=i2c1_baudrate=100000
 after editing of this line don't forget to reboot your RPi
 ----
 Run the script by
-python SSD1306.py
+python monitor.py
 
 
