@@ -102,8 +102,8 @@ font = ImageFont.load_default()
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
 font = ImageFont.truetype('Montserrat-Light.ttf', 12)
 font2 = ImageFont.truetype('fontawesome-webfont.ttf', 14)
-font_icon_big = ImageFont.truetype('fontawesome-webfont.ttf', 20)
-font_text_big = ImageFont.truetype('Montserrat-Medium.ttf', 19)
+font_icon = ImageFont.truetype('fontawesome-webfont.ttf', 20)
+font_text_small = ImageFont.truetype('Montserrat-Medium.ttf', 8)
 
 while True:
 
@@ -113,32 +113,45 @@ while True:
     # Shell scripts for system monitoring from here : https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
     cmd = "hostname -I | cut -d\' \' -f1 | head --bytes -1"
     IP = subprocess.check_output(cmd, shell = True )
-    cmd = "top -bn1 | grep load | awk '{printf \"%.2f\", $(NF-2)}'"
+
+    cmd = "top -bn1 | grep load | awk '{printf \"CPU %.2f\", $(NF-2)}'"
     CPU = subprocess.check_output(cmd, shell = True )
-    cmd = "free -m | awk 'NR==2{printf \"MEM: %.2f%%\", $3*100/$2 }'"
+    
+    cmd = "free -m | awk 'NR==2{printf \"%.2f%%\", $3*100/$2 }'"
     MemUsage = subprocess.check_output(cmd, shell = True )
+    
     cmd = "df -h | awk '$NF==\"/\"{printf \"HDD: %d/%dGB %s\", $3,$2,$5}'"
     cmd = "df -h | awk '$NF==\"/\"{printf \"%s\", $5}'"
     Disk = subprocess.check_output(cmd, shell = True )
+    
     cmd = "vcgencmd measure_temp | cut -d '=' -f 2 | head --bytes -1"
     Temperature = subprocess.check_output(cmd, shell = True )
 
     # Icons
-    draw.text((x, top),       unichr(61931),  font=font2, fill=255)
-    draw.text((x+50, top+52), unichr(61888),  font=font2, fill=255)
-    draw.text((x, top+52),    unichr(62152),  font=font2, fill=255)
-    draw.text((x, top+15),    unichr(62171),  font=font_icon_big, fill=255)
+    # Icon temperator
+    draw.text((x, top+5),    unichr(62152),  font=font_icon, fill=255)
+    # Icon memory
+    draw.text((x+60, top+5), unichr(62171),  font=font_icon, fill=255)
+    # Icon disk
+    draw.text((x, top+30), unichr(61888),  font=font2, fill=255)
+    # Icon Wifi
+    draw.text((x, top+52), unichr(61931),  font=font2, fill=255)
+       
+  # Text temperatur 
+    draw.text((x+15, top+5), str(Temperature),  font=font, fill=255)
+  # Text mem usage  
+    draw.text((x+80, top+5),    str(MemUsage),  font=font, fill=255)
+  # Text Disk usage  
+    draw.text((x+15, top+30),   str(Disk),  font=font, fill=255)
+  # Text cpu usage  
+    draw.text((x+60, top+30),      str(CPU), font=font, fill=255)
+  
+   # Text IP addresss  
+    draw.text((x+20, top+55),      str(IP),  font=font_text_small, fill=255)
     
-    draw.text((18, top),      str(IP),  font=font, fill=255)
-    draw.text((x+22, top+12), str(CPU), font=font_text_big, fill=255)
-    draw.text((x, top+36),    str(MemUsage),  font=font, fill=255)
-    #draw.text((x, top+39),   str(Disk),  font=font, fill=255)
-    draw.text((x+66, top+52), str(Disk),  font=font, fill=255)
-    draw.text((x+10, top+52), str(Temperature),  font=font, fill=255)
-    
-
-
-    # Display image.
+   # Display image.
     disp.image(image)
     disp.display()
     time.sleep(5)
+
+
