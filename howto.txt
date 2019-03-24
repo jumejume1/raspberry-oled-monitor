@@ -1,0 +1,21 @@
+Check if the display device is connected
+sudo i2cdetect -y 1
+----
+Clone Adafruit Python SSD1306 library
+git clone https://github.com/adafruit/Adafruit_Python_SSD1306
+----
+Go to the cloned repository and execute
+sudo python setup.py install
+----
+If your display frame rate is low try to increase i2c1_baudrate to 100000
+sudo nano /boot/config.txt
+
+Edit or add this line:
+dtparam=i2c1_baudrate=100000 
+
+after editing of this line don't forget to reboot your RPi
+----
+Run the script by
+python SSD1306.py
+
+
